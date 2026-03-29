@@ -1729,7 +1729,7 @@ export default function NufferFamily() {
           const d = JSON.parse(res.value);
           if (d.members) setMembers(d.members);
           if (d.photos)  setPhotos(d.photos);
-          // if (d.gallery) setGalleryPhotos(d.gallery); // gallery cleared
+          if (d.gallery) setGalleryPhotos(d.gallery);
           if (d.events)  setEvents(d.events);
           if (d.rsvps)    setRsvps(d.rsvps);
           if (d.comments) setComments(d.comments);
