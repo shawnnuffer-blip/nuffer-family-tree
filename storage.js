@@ -36,6 +36,42 @@
     }
     return result;
   }
+
+  async function saveGalleryObjPhotos(db, gallery) {
+    if (!gallery || typeof gallery !== 'object') return;
+    var keys = Object.keys(gallery);
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      var val = gallery[key];
+      if (typeof val === 'string' && val.startsWith('data:')) {
+        try {
+          await db.collection(DB_COLLECTION).doc('gallery_photo_' + key).set({ d: val });
+          console.log('[storage] saved gallery obj photo ' + key);
+        } catch (e) {
+          console.warn('[storage] failed to save gallery obj photo ' + key + ':', e.message);
+        }
+      }
+    }
+  }
+
+  async function loadGalleryObjPhotos(db, gallery) {
+    if (!gallery || typeof gallery !== 'object') return gallery;
+    var result = Object.assign({}, gallery);
+    var keys = Object.keys(result);
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      try {
+        var snap = await db.collection(DB_COLLECTION).doc('gallery_photo_' + key).get();
+        if (snap.exists && snap.data().d && snap.data().d.length > 10) {
+          result[key] = snap.data().d;
+          console.log('[storage] loaded gallery obj photo ' + key);
+        }
+      } catch (e) {
+        console.warn('[storage] failed to load gallery obj photo ' + key + ':', e.message);
+      }
+    }
+    return result;
+  }
   async function saveRecipePhotos(db, recipes) {
     if (!Array.isArray(recipes)) return;
     for (var i = 0; i < recipes.length; i++) {
@@ -78,6 +114,9 @@
           if (Array.isArray(data.gallery) && data.gallery.length > 0) {
             data.gallery = await loadGalleryPhotos(db, data.gallery);
           }
+          if (data.gallery && typeof data.gallery === 'object' && !Array.isArray(data.gallery) && Object.keys(data.gallery).length > 0) {
+            data.gallery = await loadGalleryObjPhotos(db, data.gallery);
+          }
           if (Array.isArray(data.recipes) && data.recipes.length > 0) {
             data.recipes = await loadRecipePhotos(db, data.recipes);
           }
@@ -94,6 +133,7 @@
         if (typeof toSave === 'string') {
           var data = JSON.parse(toSave);
           if (Array.isArray(data.gallery)) { await saveGalleryPhotos(db, data.gallery); }
+          if (data.gallery && typeof data.gallery === 'object' && !Array.isArray(data.gallery)) { await saveGalleryObjPhotos(db, data.gallery); }
           if (Array.isArray(data.recipes)) { await saveRecipePhotos(db, data.recipes); }
           var stripB64 = function (item) {
             if (!item) return item;
@@ -105,6 +145,7 @@
           if (Array.isArray(data.gallery)) data.gallery = data.gallery.map(stripB64);
           if (Array.isArray(data.memories)) data.memories = data.memories.map(stripB64);
           if (Array.isArray(data.recipes)) data.recipes = data.recipes.map(stripB64);
+          if (data.gallery && typeof data.gallery === 'object' && !Array.isArray(data.gallery)) { var gK = Object.keys(data.gallery); for (var gi = 0; gi < gK.length; gi++) { if (typeof data.gallery[gK[gi]] === 'string' && data.gallery[gK[gi]].startsWith('data:')) { data.gallery[gK[gi]] = ''; } } }
           toSave = JSON.stringify(data);
         }
         await db.collection(DB_COLLECTION).doc(DB_DOC).set({ value: toSave });
