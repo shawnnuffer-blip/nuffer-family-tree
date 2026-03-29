@@ -25,7 +25,7 @@ const SEED = [
   { id:"amanda",   name:"Amanda Cobb",     role:"Mom & Grandma",         emoji:"👩", bio:"Amanda Cobb. Born 1979.",                                   parentId:null,   childId:null,    gen:-1, spouseId:"shawn" },
   // Scott's children
   { id:"jessica",  name:"Jessica Nuffer",  role:"Scott's Daughter",      emoji:"👩", bio:"Jessica and Seth have three wonderful kids together.",                                                    parentId:"scott", childId:null,   gen:0 },
-  { id:"seth",     name:"Seth Anderson",   role:"Jessica's Husband",     emoji:"👨", bio:"Seth Douglass Anderson. Born 1987.",                                                                      parentId:null,   childId:null,    gen:0, spouseId:"jessica" },
+  { id:"seth",     name:"Seth Anderson",   role:"Jessica's Ex-Husband",     emoji:"👨", bio:"Seth Douglass Anderson. Born 1987.",                                                                      parentId:null,   childId:null,    gen:0, spouseId:"jessica" },
   { id:"jordan",   name:"Jordan Nuffer",   role:"Scott's Son",           emoji:"👨", bio:"Jordan and Neoma have three kids and a growing family.",                                                  parentId:"scott", childId:null,   gen:0 },
   { id:"neoma",    name:"Neoma McMurray",  role:"Jordan's Wife",         emoji:"👩", bio:"Neoma Nicole McMurray. Born 1990.",                                                                       parentId:null,   childId:null,    gen:0, spouseId:"jordan" },
   { id:"andrew",   name:"Andrew Nuffer",   role:"Scott's Son",           emoji:"👨", bio:"Andrew J. Nuffer. Born 1997.",                                                                            parentId:"scott", childId:null,   gen:0 },
